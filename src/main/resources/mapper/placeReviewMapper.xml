@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlaceReviewMapper">
+
+<select id="get" parameterType="PlaceReview" resultType="PlaceReview">
+SELECT 
+	PLACE_REVIEW_SEQ
+	, PLACE_SEQ
+	, B.MEMBER_SEQ
+	, PLACE_REVIEW_CONTENT
+	, PLACE_REVIEW_REGDATE
+	, B.MEMBER_NAME MEMBER_NAME
+	, B.MEMBER_IMG MEMBER_IMG
+FROM PLACE_REVIEW A, MEMBER B
+WHERE A.MEMBER_SEQ=B.MEMBER_SEQ AND PLACE_SEQ=#{place_seq} 
+ORDER BY PLACE_REVIEW_SEQ
+</select>
+
+<select id="getTotal" parameterType="PlaceReview" resultType="int">
+SELECT COUNT(*)
+FROM PLACE_REVIEW
+WHERE PLACE_SEQ=#{place_seq}
+</select>
+
+<insert id="insert" parameterType="PlaceReview">
+<selectKey keyProperty="place_review_seq" resultType="String" order="BEFORE">
+SELECT PLACE_REVIEW_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+INSERT INTO PLACE_REVIEW
+(
+	PLACE_REVIEW_SEQ
+	, PLACE_SEQ
+	, MEMBER_SEQ
+	, PLACE_REVIEW_CONTENT
+)
+VALUES
+(
+	#{place_review_seq}
+	, #{place_seq}
+	, #{member_seq}
+	, #{place_review_content}
+) 
+</insert>
+
+<delete id="delete" parameterType="PlaceReview">
+DELETE FROM PLACE_REVIEW
+WHERE PLACE_REVIEW_SEQ=#{place_review_seq} AND MEMBER_SEQ=#{member_seq}
+</delete>
+
+<update id="update" parameterType="PlaceReview">
+UPDATE PLACE_REVIEW
+SET PLACE_REVIEW_CONTENT=#{place_review_content}
+WHERE PLACE_REVIEW_SEQ=#{place_review_seq} AND MEMBER_SEQ=#{member_seq}
+</update>
+</mapper>

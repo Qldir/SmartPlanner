@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlanDayMapper">
+
+<sql id="PlanDayColumns">
+	PLAN_DAY_SEQ
+	, PLAN_SEQ
+	, PLAN_DAY_DATE
+</sql>
+
+<insert id="insert" parameterType="PlanDay">
+<selectKey keyProperty="plan_day_seq" resultType="String" order="BEFORE">
+SELECT PLAN_DAY_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+INSERT INTO PLAN_DAY
+(
+	PLAN_DAY_SEQ
+	, PLAN_SEQ
+	, PLAN_DAY_DATE
+)
+VALUES
+(
+	#{plan_day_seq}
+	, #{plan_seq}
+	, TO_DATE(#{plan_day_date}, 'YYYY/MM/DD')
+)
+</insert>
+
+<delete id="delete" parameterType="Plan">
+DELETE
+	FROM PLAN_DAY
+WHERE
+	PLAN_SEQ=#{plan_seq}
+</delete>
+
+<select id="getPlanDay" parameterType="Plan" resultType="PlanDay">
+SELECT
+	PLAN_DAY_SEQ
+	, PLAN_SEQ
+	, TO_CHAR(PLAN_DAY_DATE,'YYYY/MM/DD') PLAN_DAY_DATE
+FROM
+	PLAN_DAY
+WHERE
+	plan_seq=#{plan_seq}
+ORDER BY plan_day_date ASC
+</select>
+
+</mapper>

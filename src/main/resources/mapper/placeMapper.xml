@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlaceMapper">
+
+<sql id="placeColumns">
+	${alias}.place_seq AS place_seq,
+	${alias}.place_area AS place_area,
+	${alias}.place_name AS place_name,
+	${alias}.place_type AS place_type,
+	${alias}.place_opentime AS place_opentime,
+	${alias}.place_closetime AS place_closetime,
+	${alias}.place_spendtime AS place_spendtime,
+	${alias}.place_location AS place_location,
+	${alias}.place_detail AS place_detail,
+	${alias}.place_image AS place_image,
+	${alias}.place_cost AS place_cost,
+	${alias}.place_homepage AS place_homepage
+</sql>
+
+<sql id="placeTypeColumns">
+	${alias}.place_type_gender AS place_type_gender,
+	${alias}.place_type_activity AS place_type_activity,
+	${alias}.place_type_restaurant AS place_type_restaurant,
+	${alias}.place_type_drinking AS place_type_drinking,
+	${alias}.place_type_majority AS place_type_majority,
+	${alias}.place_type_mania AS place_type_mania,
+	${alias}.place_type_exhibition AS place_type_exhibition,
+	${alias}.place_type_location AS place_type_location
+</sql>
+
+
+<select id="get" resultType="Place" parameterType="Place">
+SELECT 
+	place_seq
+	, place_area
+	, place_name
+	, place_type
+	, place_opentime
+	, place_closetime
+	, place_spendtime
+	, place_location
+	, place_detail
+	, place_image
+	, place_cost
+	, place_homepage
+FROM PLACE
+<if test="place_name!=null">
+WHERE INSTR(PLACE_NAME, #{place_name}) > 0
+</if>
+</select>
+
+<select id="getTotal" parameterType="Place" resultType="int">
+SELECT COUNT(*)
+FROM PLACE
+<if test="place_area==null and place_name!=null">
+WHERE INSTR(PLACE_NAME, #{place_name}) > 0
+</if>
+<if test="place_area!=null and place_name==null">
+WHERE PLACE_AREA=#{place_area}
+</if>
+<if test="place_area!=null and place_name!=null">
+WHERE INSTR(PLACE_NAME, #{place_name}) > 0 AND PLACE_AREA=#{place_area}
+</if>
+</select>
+
+<select id="getByGrade" parameterType="Place" resultType="Place">
+SELECT 
+    A.PLACE_SEQ PLACE_SEQ
+    , B.PLACE_AREA PLACE_AREA
+    , B.PLACE_NAME PLACE_NAME
+    , B.PLACE_TYPE PLACE_TYPE
+    , B.PLACE_OPENTIME PLACE_OPENTIME
+    , B.PLACE_CLOSETIME PLACE_CLOSETIME
+    , B.PLACE_SPENDTIME PLACE_SPENDTIME
+    , B.PLACE_LOCATION PLACE_LOCATION
+    , B.PLACE_DETAIL PLACE_DETAIL
+    , B.PLACE_IMAGE PLACE_IMAGE
+    , B.PLACE_COST PLACE_COST
+    , B.PLACE_HOMEPAGE PLACE_HOMEPAGE
+    , A.PLACE_GRADE PLACE_GRADE
+FROM
+(
+    SELECT 
+        PLACE_SEQ
+        ,  ROUND(AVG(PLACE_GRADE_VALUE),1) PLACE_GRADE
+    FROM
+    (
+        SELECT
+            A.PLACE_SEQ
+            , PLACE_AREA
+            , PLACE_NAME
+            , PLACE_TYPE
+            , PLACE_OPENTIME
+            , PLACE_CLOSETIME
+            , PLACE_SPENDTIME
+            , PLACE_LOCATION
+            , PLACE_DETAIL
+            , PLACE_IMAGE
+            , PLACE_COST
+            , PLACE_HOMEPAGE
+            , NVL(PLACE_GRADE_VALUE, 0) PLACE_GRADE_VALUE
+        FROM PLACE A, PLACE_GRADE B
+        WHERE A.PLACE_SEQ=B.PLACE_SEQ(+)
+    )
+    GROUP BY PLACE_SEQ
+) a, PLACE b
+WHERE a.PLACE_SEQ = b.PLACE_SEQ
+<if test="place_name!=null">
+AND INSTR(b.PLACE_NAME,#{place_name}) > 0
+</if>
+<if test="place_area!=null">
+AND b.PLACE_AREA=#{place_area}
+</if>
+ORDER BY PLACE_GRADE DESC
+</select>
+
+
+<select id="getPlace" resultType="Place" parameterType="String">
+SELECT 
+    A.PLACE_SEQ PLACE_SEQ
+    , B.PLACE_AREA PLACE_AREA
+    , B.PLACE_NAME PLACE_NAME
+    , B.PLACE_TYPE PLACE_TYPE
+    , B.PLACE_OPENTIME PLACE_OPENTIME
+    , B.PLACE_CLOSETIME PLACE_CLOSETIME
+    , B.PLACE_SPENDTIME PLACE_SPENDTIME
+    , B.PLACE_LOCATION PLACE_LOCATION
+    , B.PLACE_DETAIL PLACE_DETAIL
+    , B.PLACE_IMAGE PLACE_IMAGE
+    , B.PLACE_COST PLACE_COST
+    , B.PLACE_HOMEPAGE PLACE_HOMEPAGE
+    , A.PLACE_GRADE PLACE_GRADE
+FROM
+(
+    SELECT 
+        PLACE_SEQ
+        ,  ROUND(AVG(PLACE_GRADE_VALUE),1) PLACE_GRADE
+    FROM
+    (
+        SELECT
+            A.PLACE_SEQ
+            , PLACE_AREA
+            , PLACE_NAME
+            , PLACE_TYPE
+            , PLACE_OPENTIME
+            , PLACE_CLOSETIME
+            , PLACE_SPENDTIME
+            , PLACE_LOCATION
+            , PLACE_DETAIL
+            , PLACE_IMAGE
+            , PLACE_COST
+            , PLACE_HOMEPAGE
+            , NVL(PLACE_GRADE_VALUE, 0) PLACE_GRADE_VALUE
+        FROM PLACE A, PLACE_GRADE B
+        WHERE A.PLACE_SEQ=B.PLACE_SEQ(+)
+    )
+    GROUP BY PLACE_SEQ
+) a, PLACE b
+WHERE a.PLACE_SEQ = b.PLACE_SEQ AND a.PLACE_SEQ=#{place_seq}
+</select>
+
+<select id="getAll" resultType="Place">
+SELECT 
+	place_seq
+	, place_area
+	, place_name
+	, place_type
+	, place_opentime
+	, place_closetime
+	, place_spendtime
+	, place_location
+	, place_detail
+	, place_image
+	, place_cost
+	, place_homepage
+FROM PLACE
+</select>
+
+
+<!-- AdminPage PlaceData -->
+<select id="getAllInfo" resultType="AdminPlace">
+SELECT
+	<include refid="placeColumns"><property name="alias" value="a"/></include>
+	,
+	<include refid="placeTypeColumns"><property name="alias" value="b"/></include>
+FROM
+	place a, place_type b
+WHERE
+	a.place_seq=b.place_type_seq
+ORDER BY place_seq ASC
+</select>
+
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.BoardCommentMapper">
+<insert id="insert" parameterType="BoardComment">
+INSERT INTO
+BOARD_COMMENT
+(
+	BOARD_COMMENT_SEQ,
+	BOARD_SEQ,
+	MEMBER_SEQ,
+	BOARD_COMMENT_CONTENT
+)VALUES
+(
+	BOARD_COMMENT_SEQ.nextval,
+	#{board_seq},
+	#{member_seq},
+	#{board_comment_content}
+)
+</insert>
+
+<update id="update" parameterType="BoardComment">
+UPDATE BOARD_COMMENT
+SET BOARD_COMMENT_CONTENT=#{board_comment_content}
+WHERE BOARD_COMMENT_SEQ=#{board_comment_seq} AND MEMBER_SEQ=#{member_seq}
+</update>
+
+<delete id="delete" parameterType="BoardComment">
+DELETE FROM 
+	BOARD_COMMENT
+WHERE
+	BOARD_COMMENT_SEQ = #{board_comment_seq} AND MEMBER_SEQ = #{member_seq}
+</delete>
+
+<select id="get" resultType="BoardComment" parameterType="Board">
+SELECT
+	A.BOARD_COMMENT_SEQ,
+	A.BOARD_SEQ,
+	A.MEMBER_SEQ,
+	A.BOARD_COMMENT_CONTENT,
+	A.BOARD_COMMENT_REGDATE,
+	B.MEMBER_NAME,
+	B.MEMBER_IMG
+FROM
+	BOARD_COMMENT A, MEMBER B
+WHERE
+	A.MEMBER_SEQ = B.MEMBER_SEQ AND A.BOARD_SEQ = #{board_seq} 
+ORDER BY A.BOARD_COMMENT_SEQ DESC
+</select>
+
+<select id="getTotal" resultType="int" parameterType="Board">
+SELECT COUNT(*)
+FROM BOARD_COMMENT
+WHERE
+	BOARD_SEQ = #{board_seq}
+</select>
+
+</mapper>

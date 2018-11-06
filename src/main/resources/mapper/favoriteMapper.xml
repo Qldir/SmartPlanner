@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.FavoriteMapper">
+
+<insert id="insert" parameterType="Favorite">
+INSERT INTO
+FAVORITE
+(
+	FAVORITE_SEQ,
+	BOARD_SEQ,
+	MEMBER_SEQ
+)VALUES
+(
+	FAVORITE_SEQ.nextval,
+	#{board_seq},
+	#{member_seq}
+)
+</insert>
+
+<delete id="delete" parameterType="Favorite">
+DELETE FROM FAVORITE
+WHERE BOARD_SEQ=#{board_seq} AND MEMBER_SEQ=#{member_seq}
+</delete>
+
+<select id="getTotal" parameterType="Favorite" resultType="int">
+SELECT COUNT(*)
+FROM FAVORITE
+WHERE BOARD_SEQ=#{board_seq}
+</select>
+
+<select id="get" parameterType="Favorite" resultType="int">
+SELECT COUNT(*)
+FROM FAVORITE
+WHERE BOARD_SEQ=#{board_seq} AND MEMBER_SEQ=#{member_seq}
+</select>
+
+<select id="getMyFavorite" resultType="BoardDTO" parameterType="String">
+SELECT 
+     A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , A.MEMBER_NAME
+    , B.FAVORITE_SUM
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , B.MEMBER_NAME
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, B.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, B.PLAN_TITLE
+	, TO_CHAR(B.PLAN_FROM, 'YYYY/MM/DD HH:MM') PLAN_FROM
+	, TO_CHAR(B.PLAN_TO, 'YYYY/MM/DD HH:MM') PLAN_TO
+	, B.PLAN_AREA 
+    , B.PLAN_IMG
+FROM BOARD A, PLAN B
+WHERE A.PLAN_SEQ = B.PLAN_SEQ
+) A, MEMBER B
+WHERE A.MEMBER_SEQ=B.MEMBER_SEQ
+) A,
+(
+SELECT
+    B.BOARD_SEQ
+    , COUNT(A.FAVORITE_SEQ) FAVORITE_SUM
+FROM 
+(
+	SELECT
+	FAVORITE_SEQ
+	, BOARD_SEQ
+	, MEMBER_SEQ
+	, FAVORITE_REGDATE
+	FROM FAVORITE
+	WHERE MEMBER_SEQ=#{member_seq}
+) A, BOARD B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ
+GROUP BY B.BOARD_SEQ
+) B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ
+ORDER BY BOARD_SEQ DESC
+</select>
+
+<select id="getMyFavoriteTotal" resultType="int" parameterType="String">
+SELECT
+	COUNT(*)
+FROM FAVORITE
+WHERE MEMBER_SEQ=#{member_seq}
+</select>
+
+
+</mapper>

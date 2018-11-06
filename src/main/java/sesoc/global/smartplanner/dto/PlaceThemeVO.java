@@ -1,0 +1,81 @@
+package sesoc.global.smartplanner.dto;
+
+public class PlaceThemeVO {
+	private int PLACE_THEME_SEQ;
+	private int PLACE_SEQ;
+	private int PLACE_THEME_FOOD;
+	private int PLACE_THEME_SHOPPING;
+	private int PLACE_THEME_HISTORY;
+	private int PLACE_THEME_COUPLE;
+
+	public PlaceThemeVO(int pLACE_THEME_SEQ, int pLACE_SEQ, int pLACE_THEME_FOOD, int pLACE_THEME_SHOPPING,
+			int pLACE_THEME_HISTORY, int pLACE_THEME_COUPLE) {
+		super();
+		PLACE_THEME_SEQ = pLACE_THEME_SEQ;
+		PLACE_SEQ = pLACE_SEQ;
+		PLACE_THEME_FOOD = pLACE_THEME_FOOD;
+		PLACE_THEME_SHOPPING = pLACE_THEME_SHOPPING;
+		PLACE_THEME_HISTORY = pLACE_THEME_HISTORY;
+		PLACE_THEME_COUPLE = pLACE_THEME_COUPLE;
+	}
+
+	public PlaceThemeVO() {
+		super();
+	}
+
+	public int getPLACE_THEME_SEQ() {
+		return PLACE_THEME_SEQ;
+	}
+
+	public void setPLACE_THEME_SEQ(int pLACE_THEME_SEQ) {
+		PLACE_THEME_SEQ = pLACE_THEME_SEQ;
+	}
+
+	public int getPLACE_SEQ() {
+		return PLACE_SEQ;
+	}
+
+	public void setPLACE_SEQ(int pLACE_SEQ) {
+		PLACE_SEQ = pLACE_SEQ;
+	}
+
+	public int getPLACE_THEME_FOOD() {
+		return PLACE_THEME_FOOD;
+	}
+
+	public void setPLACE_THEME_FOOD(int pLACE_THEME_FOOD) {
+		PLACE_THEME_FOOD = pLACE_THEME_FOOD;
+	}
+
+	public int getPLACE_THEME_SHOPPING() {
+		return PLACE_THEME_SHOPPING;
+	}
+
+	public void setPLACE_THEME_SHOPPING(int pLACE_THEME_SHOPPING) {
+		PLACE_THEME_SHOPPING = pLACE_THEME_SHOPPING;
+	}
+
+	public int getPLACE_THEME_HISTORY() {
+		return PLACE_THEME_HISTORY;
+	}
+
+	public void setPLACE_THEME_HISTORY(int pLACE_THEME_HISTORY) {
+		PLACE_THEME_HISTORY = pLACE_THEME_HISTORY;
+	}
+
+	public int getPLACE_THEME_COUPLE() {
+		return PLACE_THEME_COUPLE;
+	}
+
+	public void setPLACE_THEME_COUPLE(int pLACE_THEME_COUPLE) {
+		PLACE_THEME_COUPLE = pLACE_THEME_COUPLE;
+	}
+
+	@Override
+	public String toString() {
+		return "PlaceThemeVO [PLACE_THEME_SEQ=" + PLACE_THEME_SEQ + ", PLACE_SEQ=" + PLACE_SEQ + ", PLACE_THEME_FOOD="
+				+ PLACE_THEME_FOOD + ", PLACE_THEME_SHOPPING=" + PLACE_THEME_SHOPPING + ", PLACE_THEME_HISTORY="
+				+ PLACE_THEME_HISTORY + ", PLACE_THEME_COUPLE=" + PLACE_THEME_COUPLE + "]";
+	}
+
+}

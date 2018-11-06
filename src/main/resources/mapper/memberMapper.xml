@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.MemberMapper">
+
+
+	<insert id="insert" parameterType="Member">
+	<selectKey keyProperty="member_seq" resultType="String" order="AFTER">
+	SELECT TO_CHAR(MEMBER_SEQ.CURRVAL) FROM DUAL
+   </selectKey>
+		INSERT INTO MEMBER
+		(
+		MEMBER_SEQ
+		, MEMBER_NAME
+		, MEMBER_PW
+		, MEMBER_EMAIL
+		
+		)
+		VALUES
+		(
+		MEMBER_SEQ.NEXTVAL
+		, #{member_name}
+		, #{member_pw}
+		, #{member_email}
+		)
+	</insert>
+
+	<update id="update" parameterType="Member">
+		UPDATE MEMBER SET
+		MEMBER_NAME=#{member_name}
+		, MEMBER_PW=#{member_pw}
+		, MEMBER_IMG=#{member_img}
+		WHERE
+		MEMBER_SEQ=#{member_seq}
+	</update>
+
+	<select id="get" parameterType="Member" resultType="Member">
+		SELECT 
+			MEMBER_SEQ
+			, MEMBER_NAME
+			, MEMBER_PW
+			, MEMBER_EMAIL
+			, MEMBER_REGDATE
+			, MEMBER_INVAILD
+			, MEMBER_IMG
+			, MEMBER_TYPE
+			
+		FROM MEMBER
+		
+		WHERE
+		
+	    <if test="member_email!=null and member_pw!=null">
+			MEMBER_EMAIL=#{member_email} AND MEMBER_PW=#{member_pw}
+		</if>
+			
+		<if test="member_email!=null and member_pw==null">
+			MEMBER_EMAIL=#{member_email}
+		</if>
+		
+		 <if test="member_seq!=null">
+			MEMBER_SEQ=#{member_seq}
+		</if> 
+		
+		
+	
+
+	</select>
+
+
+
+
+	<select id="checking" parameterType="Member" resultType="int">
+		select count(*) from MEMBER
+		where
+		<!-- 닉내임 체크하는 곳 -->
+		<if test="member_email==null and member_pw==null">
+				 
+		MEMBER_NAME=#{member_name}
+				
+		
+		</if>
+		 <!-- <if test="member_email!=null and member_pw!=null">
+			MEMBER_EMAIL=#{member_email} AND MEMBER_PW=#{member_pw}
+		</if> 
+
+		<if test="member_email==null and member_pw==null">
+			MEMBER_NAME=#{member_name}
+		</if>
+ 		
+ 		<if test="member_email==null and member_pw!=null">
+			MEMBER_EMAIL=#{member_email} 
+		</if>
+		
+		<if test="member_email!=null and member_pw==null">
+			MEMBER_EMAIL=#{member_email} 
+		</if> -->
+		
+				
+	</select>
+	
+	
+	<select id="reWrite" parameterType="Member" resultType="Member">
+	
+	 select*from Member where MEMBER_SEQ=#{member_seq}
+	
+	</select>
+
+	<update id="updatingDelete" parameterType="Member">
+	UPDATE MEMBER SET
+		MEMBER_INVAILD=#{member_invaild}
+		, MEMBER_IMG=#{member_img}
+		
+		WHERE
+		MEMBER_SEQ=#{member_seq}
+	
+	
+	</update>
+
+</mapper>

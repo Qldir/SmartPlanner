@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlaceTypeMapper">
+
+<!-- 재사용을 위한 sql 조각들 -->
+
+<sql id="placeColumns">
+	${alias}.place_seq AS place_seq,
+	${alias}.place_area AS place_area,
+	${alias}.place_name AS place_name,
+	${alias}.place_type AS place_type,
+	${alias}.place_opentime AS place_opentime,
+	${alias}.place_closetime AS place_closetime,
+	${alias}.place_spendtime AS place_spendtime,
+	${alias}.place_location AS place_location,
+	${alias}.place_detail AS place_detail,
+	${alias}.place_image AS place_image,
+	${alias}.place_cost AS place_cost,
+	${alias}.place_homepage AS place_homepage
+</sql>
+
+<sql id="placeTypeColumns">
+	${alias}.place_type_seq AS place_type_seq,
+	${alias}.place_seq AS place_seq,
+	${alias}.place_type_gender AS place_type_gender,
+	${alias}.place_type_activity AS place_type_activity,
+	${alias}.place_type_restaurant AS place_type_restaurant,
+	${alias}.place_type_drinking AS place_type_drinking,
+	${alias}.place_type_majority AS place_type_majority,
+	${alias}.place_type_mania AS place_type_mania,
+	${alias}.place_type_exhibition AS place_type_exhibition,
+	${alias}.place_type_location AS place_type_location
+</sql>
+
+
+<!-- 매핑 구문 시작 부분 -->
+<select id="getList" parameterType="PlaceType" resultType="PlaceDTO">
+SELECT
+	<include refid="placeColumns"><property name="alias" value="a"/></include>
+	,
+	<include refid="placeTypeColumns"><property name="alias" value="b"/></include>
+FROM
+	place a,
+(SELECT
+	<include refid="placeTypeColumns"><property name="alias" value="a"/></include>
+FROM
+	place_type a,
+	(SELECT place_seq FROM place WHERE place_area=#{place_area} 
+		<if test="place_type_shopping==0">
+		AND place_type IN('K','k')
+		</if>
+		<if test="place_type_shopping==1">
+		AND place_type IN('k','K','S','s')
+		</if>
+	) b
+WHERE
+	a.place_seq=b.place_seq
+<!-- gender -->
+<!-- <if test="place_type_gender==0">
+AND place_type_gender=0
+</if>
+<if test="place_type_gender==1">
+AND	place_type_gender IN(0,1)
+</if>
+<if test="place_type_gender==2">
+AND	place_type_gender IN(0,2)
+</if> -->
+<!-- activity -->
+<if test="place_type_activity==0">
+AND place_type_activity IN(0,1)
+</if>
+<if test="place_type_activity==1">
+AND place_type_activity=1
+</if>
+<!-- restaurant -->
+<if test="place_type_restaurant==0">
+AND place_type_restaurant IN(0,1)
+</if>
+<if test="place_type_restaurant==1">
+AND place_type_restaurant=1
+</if>
+<!-- drinking -->
+<if test="place_type_drinking==0">
+AND place_type_drinking IN(0,1)
+</if>
+<if test="place_type_drinking==1">
+AND place_type_drinking=1
+</if>
+<!-- majority -->
+<if test="place_type_majority==0">
+AND place_type_majority IN(0,1)
+</if>
+<if test="place_type_majority==1">
+AND place_type_majority=1
+</if>
+<!-- location -->
+<if test="place_type_location==0">
+AND place_type_location=0
+</if>
+<if test="place_type_location==1">
+AND place_type_location IN(0,1)
+</if>
+<if test="place_type_location==2">
+AND place_type_location IN(0,1,2)
+</if>
+<!-- mania -->
+<!-- AND place_type_mania=0 -->
+<!-- exhibition -->
+<!-- AND place_type_exhibition=0 -->
+) b
+WHERE
+	a.place_seq=b.place_seq
+</select>
+
+</mapper>

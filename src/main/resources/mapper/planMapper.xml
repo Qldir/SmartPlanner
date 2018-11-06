@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlanMapper">
+
+
+<sql id="planColumns">
+	PLAN_SEQ
+	, MEMBER_SEQ
+	, PLAN_TITLE
+	, PLAN_PEOPLECOUNT
+	, TO_CHAR(PLAN_FROM,'YYYY.MM.DD') PLAN_FROM
+	, TO_CHAR(PLAN_TO,'YYYY.MM.DD') PLAN_TO
+	, PLAN_AREA
+	, PLAN_STARTLOCATION
+	, PLAN_IMG
+</sql>
+
+<insert id="insert" parameterType="Plan">
+<selectKey keyProperty="plan_seq" resultType="String" order="BEFORE">
+SELECT PLAN_SEQ.NEXTVAL FROM DUAL
+</selectKey>
+INSERT INTO PLAN
+(
+	PLAN_SEQ
+	, MEMBER_SEQ
+	, PLAN_TITLE
+	, PLAN_PEOPLECOUNT
+	, PLAN_FROM
+	, PLAN_TO
+	, PLAN_AREA
+	, PLAN_STARTLOCATION
+	, PLAN_IMG
+)
+VALUES
+(
+	#{plan_seq}
+	, #{member_seq}
+	, #{plan_title}
+	, #{plan_peoplecount}
+	, TO_DATE(#{plan_from}, 'MM/DD/YYYY HH:MI AM', 'nls_date_language=american')  
+	, TO_DATE(#{plan_to}, 'MM/DD/YYYY HH:MI AM', 'nls_date_language=american')
+	, #{plan_area}
+	, #{plan_startlocation}
+	, #{plan_img}
+)
+</insert>
+
+<delete id="delete" parameterType="Plan">
+DELETE
+	FROM PLAN
+WHERE
+	PLAN_SEQ=#{plan_seq} AND MEMBER_SEQ=#{member_seq}
+</delete>
+
+<update id="update" parameterType="Plan">
+UPDATE PLAN
+SET
+	PLAN_TITLE=#{plan_title}
+	, PLAN_PEOPLECOUNT=#{plan_peoplecount}
+	, PLAN_FROM=TO_DATE(#{plan_from}, 'YYYY/MM/DD HH24:MI')
+	, PLAN_TO=TO_DATE(#{plan_to}, 'YYYY/MM/DD HH24:MI')
+	, PLAN_AREA=#{plan_area}
+	, PLAN_STARTLOCATION=#{plan_startlocation}
+	, PLAN_IMG=#{plan_img}
+WHERE
+	PLAN_SEQ=#{plan_seq}
+</update>
+
+<select id="getPlan" parameterType="Plan" resultType="Plan">
+SELECT
+	PLAN_SEQ
+	, MEMBER_SEQ
+	, PLAN_TITLE
+	, PLAN_PEOPLECOUNT
+	, to_char(PLAN_FROM,'YYYY/MM/DD HH24:MI') PLAN_FROM
+	, to_char(PLAN_TO,'YYYY/MM/DD HH24:MI') PLAN_TO
+	, PLAN_AREA
+	, PLAN_STARTLOCATION
+	, PLAN_IMG
+FROM
+	PLAN
+WHERE
+	plan_seq=#{plan_seq}
+</select>
+
+<select id="getMyPlan" parameterType="Member" resultType="Plan">
+SELECT
+	<include refid="planColumns"></include>
+FROM
+	PLAN
+WHERE
+	MEMBER_SEQ=#{member_seq}
+ORDER BY PLAN_SEQ DESC
+</select>
+
+<select id="getMyPlanTotal" parameterType="Member" resultType="int">
+SELECT
+	COUNT(*)
+FROM
+	PLAN
+WHERE
+	MEMBER_SEQ=#{member_seq}
+</select>
+
+</mapper>

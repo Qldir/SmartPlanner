@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.BoardMapper">
+
+<insert id="insert" parameterType="Board">
+INSERT INTO
+BOARD
+(
+	BOARD_SEQ,
+	MEMBER_SEQ,
+	PLAN_SEQ,
+	BOARD_CONTENT
+)
+VALUES
+(
+	BOARD_SEQ.NEXTVAL,
+	#{member_seq},
+	#{plan_seq},
+	#{board_content}
+)
+</insert>
+
+<delete id="delete" parameterType="Board">
+DELETE FROM
+	BOARD
+WHERE
+	BOARD_SEQ = #{board_seq} AND MEMBER_SEQ=#{member_seq}
+</delete>
+
+<update id="update" parameterType="Board">
+UPDATE
+	BOARD
+SET
+	BOARD_CONTENT = #{board_content}
+WHERE
+	BOARD_SEQ = #{board_seq} 
+	AND MEMBER_SEQ = #{member_seq}
+</update>
+
+<update id="addhits" parameterType="String">
+UPDATE
+	BOARD
+SET
+	BOARD_HITCOUNT = BOARD_HITCOUNT+1
+WHERE
+	BOARD_SEQ = #{board_seq}
+</update>
+
+<select id="get" parameterType="Board">
+SELECT 
+	BOARD_SEQ
+	, MEMBER_SEQ
+	, PLAN_SEQ
+	, BOARD_CONTENT
+	, BOARD_HITCOUNT
+	, BOARD_REGDATE
+FROM BOARD
+WHERE BOARD_SEQ=#{board_seq}
+</select>
+
+<select id="getTotal" parameterType="Board" resultType="int">
+SELECT 
+    COUNT(*)
+FROM 
+	BOARD
+</select>
+
+<select id="selectOne" parameterType="Board" resultType="BoardDTO">
+SELECT 
+     A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , A.MEMBER_NAME
+    , B.FAVORITE_SUM
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , B.MEMBER_NAME
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, B.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, B.PLAN_TITLE
+	, TO_CHAR(B.PLAN_FROM, 'YYYY/MM/DD HH:MM') PLAN_FROM
+	, TO_CHAR(B.PLAN_TO, 'YYYY/MM/DD HH:MM') PLAN_TO
+	, B.PLAN_AREA 
+    , B.PLAN_IMG
+FROM BOARD A, PLAN B
+WHERE A.PLAN_SEQ = B.PLAN_SEQ
+) A, MEMBER B
+WHERE A.MEMBER_SEQ=B.MEMBER_SEQ
+) A,
+(
+SELECT
+    A.BOARD_SEQ
+    , COUNT(B.FAVORITE_SEQ) FAVORITE_SUM
+FROM BOARD A, FAVORITE B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ(+)
+GROUP BY A.BOARD_SEQ
+) B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ
+AND A.BOARD_SEQ = #{board_seq}
+ORDER BY BOARD_SEQ DESC
+</select>
+
+<select id="selectAll" resultType="BoardDTO">
+SELECT 
+     A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , A.MEMBER_NAME
+    , B.FAVORITE_SUM
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , B.MEMBER_NAME
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, B.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, B.PLAN_TITLE
+	, TO_CHAR(B.PLAN_FROM, 'YYYY/MM/DD HH:MM') PLAN_FROM
+	, TO_CHAR(B.PLAN_TO, 'YYYY/MM/DD HH:MM') PLAN_TO
+	, B.PLAN_AREA 
+    , B.PLAN_IMG
+FROM BOARD A, PLAN B
+WHERE A.PLAN_SEQ = B.PLAN_SEQ
+) A, MEMBER B
+WHERE A.MEMBER_SEQ=B.MEMBER_SEQ
+) A,
+(
+SELECT
+    A.BOARD_SEQ
+    , COUNT(B.FAVORITE_SEQ) FAVORITE_SUM
+FROM BOARD A, FAVORITE B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ(+)
+GROUP BY A.BOARD_SEQ
+) B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ
+ORDER BY BOARD_SEQ DESC
+</select>
+
+<select id="selectAllOrderByFavorite" resultType="BoardDTO">
+SELECT 
+     A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , A.MEMBER_NAME
+    , B.FAVORITE_SUM
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, A.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, A.PLAN_TITLE
+	, A.PLAN_FROM
+	, A.PLAN_TO
+	, A.PLAN_AREA 
+    , A.PLAN_IMG
+    , B.MEMBER_NAME
+FROM 
+(
+SELECT 
+    A.BOARD_SEQ
+	, A.MEMBER_SEQ
+	, B.PLAN_SEQ 
+	, A.BOARD_CONTENT 
+	, A.BOARD_HITCOUNT 
+	, A.BOARD_REGDATE
+	, B.PLAN_TITLE
+	, TO_CHAR(B.PLAN_FROM, 'YYYY/MM/DD HH:MM') PLAN_FROM
+	, TO_CHAR(B.PLAN_TO, 'YYYY/MM/DD HH:MM') PLAN_TO
+	, B.PLAN_AREA 
+    , B.PLAN_IMG
+FROM BOARD A, PLAN B
+WHERE A.PLAN_SEQ = B.PLAN_SEQ
+) A, MEMBER B
+WHERE A.MEMBER_SEQ=B.MEMBER_SEQ
+) A,
+(
+SELECT
+    A.BOARD_SEQ
+    , COUNT(B.FAVORITE_SEQ) FAVORITE_SUM
+FROM BOARD A, FAVORITE B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ(+)
+GROUP BY A.BOARD_SEQ
+) B
+WHERE A.BOARD_SEQ=B.BOARD_SEQ
+ORDER BY B.FAVORITE_SUM DESC
+</select>
+
+</mapper>

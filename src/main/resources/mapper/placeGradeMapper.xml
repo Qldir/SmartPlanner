@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlaceGradeMapper">
+
+<select id="get" resultType="String" parameterType="String">
+SELECT ROUND(AVG(PLACE_GRADE_VALUE),1)
+FROM PLACE_GRADE
+WHERE PLACE_SEQ = #{place_seq}
+</select>
+
+<select id="getUserReview" resultType="String" parameterType="PlaceGrade">
+SELECT
+	PLACE_GRADE_VALUE
+FROM PLACE_GRADE
+WHERE PLACE_SEQ=#{place_seq} AND MEMBER_SEQ=#{member_seq}
+</select>
+
+<update id="update" parameterType="PlaceGrade">
+UPDATE PLACE_GRADE
+SET
+	PLACE_GRADE_VALUE = #{place_grade_value}
+	, PLACE_GRADE_REGDATE = SYSDATE
+WHERE PLACE_SEQ=#{place_seq} AND MEMBER_SEQ=#{member_seq}
+</update>
+
+<insert id="insert" parameterType="PlaceGrade">
+INSERT INTO PLACE_GRADE
+(
+	PLACE_GRADE_SEQ
+	, PLACE_SEQ
+	, MEMBER_SEQ
+	, PLACE_GRADE_VALUE
+)
+VALUES
+(
+	PLACE_GRADE_SEQ.NEXTVAL
+	, #{place_seq}
+	, #{member_seq}
+	, #{place_grade_value}
+)
+</insert>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="sesoc.global.smartplanner.dao.PlanDayPlaceMapper">
+
+<sql id="PlanDayPlaceColumns">
+	PLAN_DAY_PLACE_SEQ
+	, PLAN_DAY_SEQ
+	, PLACE_SEQ
+</sql>
+
+<insert id="insert" parameterType="PlanDayPlace">
+INSERT INTO PLAN_DAY_PLACE
+(
+	PLAN_DAY_PLACE_SEQ
+	, PLAN_DAY_SEQ
+	, PLACE_SEQ
+)
+VALUES
+(
+	PLAN_DAY_PLACE_SEQ.NEXTVAL
+	, #{plan_day_seq}
+	, #{place_seq}
+)
+</insert>
+
+<select id="getPlanDayPlace" parameterType="PlanDay" resultType="PlanDayPlace">
+SELECT
+	<include refid="PlanDayPlaceColumns"></include>
+FROM
+	PLAN_DAY_PLACE
+WHERE
+	plan_day_seq=#{plan_day_seq}
+ORDER BY plan_day_place_seq ASC
+</select>
+
+</mapper>

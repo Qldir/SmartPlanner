@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- Java Class에 대한 alias 지정 -->
+	<typeAliases>
+		<typeAlias type="sesoc.global.smartplanner.dto.BoardVO" alias="Board" />
+		<typeAlias type="sesoc.global.smartplanner.dto.BoardDTO" alias="BoardDTO" />
+		<typeAlias type="sesoc.global.smartplanner.dto.BoardCommentVO" alias="BoardComment" />
+		<typeAlias type="sesoc.global.smartplanner.dto.FavoriteVO" alias="Favorite" />
+		<typeAlias type="sesoc.global.smartplanner.dto.MemberVO" alias="Member" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceGradeVO" alias="PlaceGrade" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceReviewVO" alias="PlaceReview" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceThemeVO" alias="PlaceTheme"/>
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceTypeVO" alias="PlaceType" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceVO" alias="Place" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlanDayPlaceVO" alias="PlanDayPlace" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlanDayVO" alias="PlanDay" />
+		<typeAlias type="sesoc.global.smartplanner.dto.PlanVO" alias="Plan" />
+		<typeAlias type="sesoc.global.smartplanner.dto.HotelVO" alias="Hotel"/>
+		<typeAlias type="sesoc.global.smartplanner.dto.PlaceDTO" alias="PlaceDTO"/>
+		<typeAlias type="sesoc.global.smartplanner.dto.AdminPlaceDTO" alias="AdminPlace"/>
+	</typeAliases>
+	
+	<!-- Mapper 파일 -->
+	<mappers>
+		<mapper resource="mapper/memberMapper.xml"/>
+		<mapper resource="mapper/planMapper.xml"/>
+		<mapper resource="mapper/planDayMapper.xml"/>
+		<mapper resource="mapper/planDayPlaceMapper.xml"/>
+		<mapper resource="mapper/placeMapper.xml"/>
+		<mapper resource="mapper/placeThemeMapper.xml"/>
+		<mapper resource="mapper/placeTypeMapper.xml"/>
+		<mapper resource="mapper/placeGradeMapper.xml"/>
+		<mapper resource="mapper/placeReviewMapper.xml"/>
+		<mapper resource="mapper/favoriteMapper.xml"/>
+		<mapper resource="mapper/boardMapper.xml"/>
+		<mapper resource="mapper/boardCommentMapper.xml"/>
+		<mapper resource="mapper/hotelMapper.xml"/>
+	</mappers>
+	
+</configuration>
